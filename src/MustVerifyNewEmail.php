@@ -54,8 +54,8 @@ trait MustVerifyNewEmail
             'user_id' => $this->getKey(),
             'email' => $email,
             'token' => Password::broker()->getRepository()->createNewToken(),
-        ])
-            ;
+            'undo_token' => Password::broker()->getRepository()->createNewToken(),
+        ]);
     }
 
     /**

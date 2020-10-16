@@ -8,6 +8,15 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Traits\Tappable;
 
+/**
+ * Class PendingUserEmail
+ * @package ProtoneMedia\LaravelVerifyNewEmail
+ * @method forUser
+ * @method whereEmail
+ * @property string $token
+ * @property string $undo_token
+ * @property string $email
+ */
 class PendingUserEmail extends Model
 {
     use Tappable;
@@ -17,7 +26,7 @@ class PendingUserEmail extends Model
      */
     public const UPDATED_AT = null;
 
-    public const USER_MODEL_APPEND_VERIFIED = 'new_email_virified';
+    public const USER_MODEL_APPEND_VERIFIED = 'new_email_verified';
 
     /**
      * @var array
@@ -27,7 +36,7 @@ class PendingUserEmail extends Model
     /**
      * User relationship
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return MorphTo
      */
     public function user(): MorphTo
     {
@@ -38,10 +47,10 @@ class PendingUserEmail extends Model
      * Scope for the user.
      *
      * @param $query
-     * @param \Illuminate\Database\Eloquent\Model $user
+     * @param Model $user
      * @return void
      */
-    public function scopeForUser($query, Model $user)
+    public function scopeForUser($query, Model $user): void
     {
         $query->where([
             $this->qualifyColumn('user_type') => get_class($user),
@@ -54,7 +63,7 @@ class PendingUserEmail extends Model
      *
      * @return void
      */
-    public function activate()
+    public function activate(): void
     {
         $user = $this->user;
 
@@ -69,6 +78,13 @@ class PendingUserEmail extends Model
         $dispatchEvent ? event(new Verified($user)) : null;
     }
 
+    public function undo(): void
+    {
+        $user = $this->user;
+        $user->markEmailAsVerified();
+        static::whereEmail($this->email)->get()->each->delete();
+    }
+
     /**
      * Creates a temporary signed URL to verify the pending email.
      *
@@ -80,6 +96,15 @@ class PendingUserEmail extends Model
             config('verify-new-email.route') ?: 'pendingEmail.verify',
             now()->addMinutes(config('auth.verification.expire', 60)),
             ['token' => $this->token]
+        );
+    }
+
+    public function undoUrl(): string
+    {
+        return URL::temporarySignedRoute(
+            config('verify-new-email.route') ?: 'pendingEmail.undo',
+            now()->addMinutes(config('auth.verification_undo.expire', 1440)),
+            ['token' => $this->undo_token]
         );
     }
 }
