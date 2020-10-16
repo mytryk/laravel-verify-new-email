@@ -38,6 +38,7 @@ class ServiceProvider extends BaseServiceProvider
 
             // $this->commands([]);
         }
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang/', 'verify-new-email');
     }
 
     /**

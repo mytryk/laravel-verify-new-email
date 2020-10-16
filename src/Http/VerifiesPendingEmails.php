@@ -2,16 +2,18 @@
 
 namespace ProtoneMedia\LaravelVerifyNewEmail\Http;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 
 trait VerifiesPendingEmails
 {
     /**
      * Mark the user's new email address as verified.
-     *
-     * @param  string $token
-     *
-     * @throws \ProtoneMedia\LaravelVerifyNewEmail\Http\InvalidVerificationLinkException
+     * @param string $token
+     * @return Application|RedirectResponse|Redirector
+     * @throws InvalidVerificationLinkException
      */
     public function verify(string $token)
     {
@@ -21,10 +23,11 @@ trait VerifiesPendingEmails
             );
         })->tap(function ($pendingUserEmail) {
             $pendingUserEmail->activate();
-        })->user;
+        })->user
+        ;
 
         if (config('verify-new-email.login_after_verification')) {
-            return Auth::guard()->login($user, config('verify-new-email.login_remember'));
+            Auth::guard()->login($user, config('verify-new-email.login_remember'));
         }
 
         return $this->authenticated();
