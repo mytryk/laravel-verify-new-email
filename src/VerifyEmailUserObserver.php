@@ -4,7 +4,7 @@ namespace ProtoneMedia\LaravelVerifyNewEmail;
 
 use Illuminate\Database\Eloquent\Model;
 
-class VerifiedEmailUserObserver
+class VerifyEmailUserObserver
 {
     public function updating(Model $user): void
     {
