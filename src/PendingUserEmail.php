@@ -57,7 +57,8 @@ class PendingUserEmail extends Model
         $user = $this->user;
 
         $dispatchEvent = !$user->hasVerifiedEmail() || $user->email !== $this->email;
-
+        $this->verified = true;
+        $this->save();
         $user->email = $this->email;
         $user->save();
         $user->markEmailAsVerified();
