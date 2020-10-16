@@ -12,7 +12,7 @@ class VerifyEmailUserObserver
         $original_email = $user->getOriginal('email');
         if (array_key_exists('email', $dirty) && $dirty['email'] !== $original_email) {
             if (!$user->hasAppended(PendingUserEmail::USER_MODEL_APPEND_VERIFIED)) {
-                $user->email_verified_at = null;
+                $user->prepareToMarkEmailAsNotVerified();
                 $user->sendEmailVerificationNotification();
                 $user->email = $original_email;
             }

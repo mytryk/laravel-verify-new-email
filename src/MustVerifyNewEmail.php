@@ -107,4 +107,11 @@ trait MustVerifyNewEmail
 
         return $this->newEmail($pendingUserEmail->email);
     }
+
+    public function prepareToMarkEmailAsNotVerified(): void
+    {
+        $this->forceFill([
+            'email_verified_at' => null,
+        ]);
+    }
 }
