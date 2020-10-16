@@ -17,6 +17,8 @@ class PendingUserEmail extends Model
      */
     public const UPDATED_AT = null;
 
+    public const USER_MODEL_APPEND_VERIFIED = 'new_email_virified';
+
     /**
      * @var array
      */
@@ -57,8 +59,7 @@ class PendingUserEmail extends Model
         $user = $this->user;
 
         $dispatchEvent = !$user->hasVerifiedEmail() || $user->email !== $this->email;
-        $this->verified = true;
-        $this->save();
+        $user->append([static::USER_MODEL_APPEND_VERIFIED => true]);
         $user->email = $this->email;
         $user->save();
         $user->markEmailAsVerified();
