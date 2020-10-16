@@ -32,6 +32,10 @@ class ServiceProvider extends BaseServiceProvider
                 __DIR__ . '/../resources/views' => resource_path('views/vendor/verify-new-email'),
             ], 'views');
 
+            $this->publishes([
+                __DIR__.'/../resources/lang' => resource_path("lang/vendor/verify-new-email"),
+            ]);
+
             // $this->commands([]);
         }
     }

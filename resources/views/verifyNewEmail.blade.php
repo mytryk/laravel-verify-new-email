@@ -1,14 +1,14 @@
 @component('mail::message')
-# Verify New Email Address
+# {{__('verify-new-email::messages.Verify New Email Address')}}
 
-Please click the button below to verify your new email address.
+{{__('verify-new-email::messages.Please click the button below to verify your new email address')}}.
 
 @component('mail::button', ['url' => $url])
-Verify New Email Address
+{{__('verify-new-email::messages.Verify New Email Address')}}
 @endcomponent
 
-If you did not update your email address, no further action is required.
+{{__('verify-new-email::messages.If you did not update your email address, no further action is required')}}.
 
-Thanks,<br>
+{{__('verify-new-email::messages.Thanks')}},<br>
 {{ config('app.name') }}
 @endcomponent

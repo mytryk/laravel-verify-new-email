@@ -12,9 +12,9 @@ trait MustVerifyNewEmail
      * Deletes all previous attempts for this user, creates a new model/token
      * to verify the given email address and send the verification URL
      * to the new email address.
-     *
      * @param string $email
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @return Model|null
+     * @throws InvalidEmailVerificationModelException
      */
     public function newEmail(string $email): ?Model
     {
@@ -24,7 +24,8 @@ trait MustVerifyNewEmail
 
         return $this->createPendingUserEmailModel($email)->tap(function ($model) {
             $this->sendPendingEmailVerificationMail($model);
-        });
+        })
+            ;
     }
 
     public function getEmailVerificationModel(): Model
@@ -40,9 +41,9 @@ trait MustVerifyNewEmail
 
     /**
      * Creates new PendingUserModel model for the given email.
-     *
      * @param string $email
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
+     * @throws InvalidEmailVerificationModelException
      */
     public function createPendingUserEmailModel(string $email): Model
     {
@@ -50,16 +51,17 @@ trait MustVerifyNewEmail
 
         return $this->getEmailVerificationModel()->create([
             'user_type' => get_class($this),
-            'user_id'   => $this->getKey(),
-            'email'     => $email,
-            'token'     => Password::broker()->getRepository()->createNewToken(),
-        ]);
+            'user_id' => $this->getKey(),
+            'email' => $email,
+            'token' => Password::broker()->getRepository()->createNewToken(),
+        ])
+            ;
     }
 
     /**
      * Returns the pending email address.
-     *
      * @return string|null
+     * @throws InvalidEmailVerificationModelException
      */
     public function getPendingEmail(): ?string
     {
@@ -68,8 +70,8 @@ trait MustVerifyNewEmail
 
     /**
      * Deletes the pending email address models for this user.
-     *
      * @return void
+     * @throws InvalidEmailVerificationModelException
      */
     public function clearPendingEmail()
     {
@@ -78,8 +80,7 @@ trait MustVerifyNewEmail
 
     /**
      * Sends the VerifyNewEmail Mailable to the new email address.
-     *
-     * @param \Illuminate\Database\Eloquent\Model $pendingUserEmail
+     * @param Model $pendingUserEmail
      * @return mixed
      */
     public function sendPendingEmailVerificationMail(Model $pendingUserEmail)
@@ -97,8 +98,8 @@ trait MustVerifyNewEmail
 
     /**
      * Grabs the pending user email address, generates a new token and sends the Mailable.
-     *
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @return Model|null
+     * @throws InvalidEmailVerificationModelException
      */
     public function resendPendingEmailVerificationMail(): ?Model
     {

@@ -15,7 +15,7 @@ class PendingUserEmail extends Model
     /**
      * This model won't be updated.
      */
-    const UPDATED_AT = null;
+    public const UPDATED_AT = null;
 
     /**
      * @var array
