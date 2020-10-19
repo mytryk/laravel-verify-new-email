@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use ProtoneMedia\LaravelVerifyNewEmail\Http\UndoNewEmailController;
 use ProtoneMedia\LaravelVerifyNewEmail\Http\VerifyNewEmailController;
 
 Route::get('pendingEmail/verify/{token}', [VerifyNewEmailController::class, 'verify'])

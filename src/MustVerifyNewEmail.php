@@ -18,7 +18,7 @@ trait MustVerifyNewEmail
      */
     public function newEmail(string $email): ?Model
     {
-        if ($this->getOriginal(['email']) === $email && $this->hasVerifiedEmail()) {
+        if ($this->getOriginal('email') === $email && $this->hasVerifiedEmail()) {
             return null;
         }
 
@@ -54,7 +54,6 @@ trait MustVerifyNewEmail
             'user_id' => $this->getKey(),
             'email' => $email,
             'token' => Password::broker()->getRepository()->createNewToken(),
-            'undo_token' => Password::broker()->getRepository()->createNewToken(),
         ]);
     }
 

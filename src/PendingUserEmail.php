@@ -14,7 +14,6 @@ use Illuminate\Support\Traits\Tappable;
  * @method forUser
  * @method whereEmail
  * @property string $token
- * @property string $undo_token
  * @property string $email
  */
 class PendingUserEmail extends Model
@@ -92,12 +91,4 @@ class PendingUserEmail extends Model
         );
     }
 
-    public function undoUrl(): string
-    {
-        return URL::temporarySignedRoute(
-            config('verify-new-email.route') ?: 'pendingEmail.undo',
-            now()->addMinutes(config('auth.verification_undo.expire', 1440)),
-            ['token' => $this->undo_token]
-        );
-    }
 }
