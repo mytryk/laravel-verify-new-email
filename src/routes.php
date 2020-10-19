@@ -7,7 +7,3 @@ use ProtoneMedia\LaravelVerifyNewEmail\Http\VerifyNewEmailController;
 Route::get('pendingEmail/verify/{token}', [VerifyNewEmailController::class, 'verify'])
     ->middleware(['web', 'signed'])
     ->name('pendingEmail.verify');
-
-Route::get('pendingEmail/undo/{token}', [VerifyNewEmailController::class, 'undo'])
-    ->middleware(['web', 'signed'])
-    ->name('pendingEmail.undo');

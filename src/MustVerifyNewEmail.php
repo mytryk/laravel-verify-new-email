@@ -18,7 +18,7 @@ trait MustVerifyNewEmail
      */
     public function newEmail(string $email): ?Model
     {
-        if ($this->getEmailForVerification() === $email && $this->hasVerifiedEmail()) {
+        if ($this->getOriginal(['email']) === $email && $this->hasVerifiedEmail()) {
             return null;
         }
 

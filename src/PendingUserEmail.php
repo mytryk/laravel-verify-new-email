@@ -78,13 +78,6 @@ class PendingUserEmail extends Model
         $dispatchEvent ? event(new Verified($user)) : null;
     }
 
-    public function undo(): void
-    {
-        $user = $this->user;
-        $user->markEmailAsVerified();
-        static::whereEmail($this->email)->get()->each->delete();
-    }
-
     /**
      * Creates a temporary signed URL to verify the pending email.
      *

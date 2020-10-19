@@ -18,7 +18,6 @@ class CreatePendingUserEmailsTable extends Migration
             $table->morphs('user');
             $table->string('email')->index();
             $table->string('token');
-            $table->string('undo_token');
             $table->timestamp('created_at')->nullable();
         });
     }
